@@ -2,12 +2,12 @@
 
 import { useZustandStore } from "@/Store/useZustandStore";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Table } from "antd";
+import { Button, Table } from "antd";
 import { useState } from "react";
+import AddUserNote from "./AddUserNote";
 
 // columns options
 const columns = [
-  { title: "Serial", dataIndex: "serial", key: "serial" },
   { title: "Name", dataIndex: "name", key: "name" },
   { title: "Email", dataIndex: "email", key: "email" },
   { title: "Location", dataIndex: "location", key: "location" },
@@ -46,28 +46,9 @@ const formItemLayout = {
 
 export default function UsersNotes() {
   const { notes } = useZustandStore();
-  // const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
-  // handle modal
-  const handleModal = () => setOpenModal(!openModal);
-
   console.log("notes ", notes);
-
-  const showModal = () => {
-    setOpenModal(true);
-  };
-  const handleOk = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setOpenModal(false);
-    }, 3000);
-  };
-  const handleCancel = () => {
-    setOpenModal(false);
-  };
 
   return (
     <>
@@ -84,94 +65,18 @@ export default function UsersNotes() {
         />
 
         <div className="inline-block absolute bottom-10 left-0">
-          <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setOpenModal(true)}
+          >
             Add New Notes
           </Button>
         </div>
       </div>
 
       {/* add notes modal */}
-      <Modal
-        open={openModal}
-        title="Add Your Notes"
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={[]}
-      >
-        {/* on submit */}
-        <Form
-          name="validate_other"
-          {...formItemLayout}
-          variant="filled"
-          style={{
-            maxWidth: 600,
-          }}
-          className="mx-auto px-3 pt-3 "
-        >
-          <Form.Item
-            label="name"
-            name="Name"
-            rules={[
-              {
-                required: true,
-                message: "Please name!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Email"
-            name="Email"
-            rules={[
-              {
-                required: true,
-                message: "Please Email!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="location"
-            name="Location"
-            rules={[
-              {
-                required: true,
-                message: "Please Location!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="notes"
-            name="notes"
-            rules={[
-              {
-                required: true,
-                message: "Please input!",
-              },
-            ]}
-          >
-            <Input.TextArea />
-          </Form.Item>
-
-          <Form.Item
-            wrapperCol={{
-              offset: 6,
-              span: 16,
-            }}
-          >
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <AddUserNote openModal={openModal} setOpenModal={setOpenModal} />
     </>
   );
 }
