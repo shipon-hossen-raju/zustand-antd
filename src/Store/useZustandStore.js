@@ -8,7 +8,6 @@ import { devtools } from "zustand/middleware";
 const initialNotes = [
   {
     key: 1,
-    serial: 1,
     name: "Shipon Hossen Raju",
     email: "msshipon234@gmail.com",
     location: "Pabna, Dhaka, BD",
@@ -16,7 +15,6 @@ const initialNotes = [
   },
   {
     key: 2,
-    serial: 2,
     name: "Sogol Islam",
     email: "sogolislam@gmail.com",
     location: "Rajbari, BD",
@@ -24,7 +22,6 @@ const initialNotes = [
   },
   {
     key: 3,
-    serial: 3,
     name: "Billal Hossen",
     email: "billalhossen@gmail.com",
     location: "Sidney No. 1 Lake Park",
@@ -32,15 +29,28 @@ const initialNotes = [
   },
 ];
 
+// generate uniq id
+const generateId = () => uuidv4();
+
 export const useZustandStore = create(
   devtools((set) => ({
     notes: [...initialNotes],
 
     addNotes: (note) =>
-      set((state) => ({ notes: [...state?.notes, { ...note, id: uuidv4() }] })),
+      set((state) => ({
+        notes: [...state?.notes, { ...note, id: generateId, key: generateId }],
+      })),
 
-    // addUser: (user) =>
-    //   set((state) => ({ users: [...state.users, { ...user, id: uuidv4() }] })),
+    updateNotes: (id, note) => {
+      set((state) => ({
+        notes: state.notes.map((n) => (n.id === id ? { ...n, ...note } : n)),
+      }));
+    },
+
+    singleNotes: (id) => {
+      const note = this.state.notes.find((note) => note.id === id);
+      return note;
+    },
 
     // deleteUser: (id) =>
     //   set((state) => ({ users: state.users.filter((user) => user.id !== id) })),
